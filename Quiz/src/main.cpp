@@ -50,9 +50,8 @@ int main(int argc, char **argv)
 {
   QApplication app(argc, argv);
 
-  Quiz quiz;
   const QStringList args = QApplication::arguments();
-  if( args.size() == 3  &&  args[1] == QStringLiteral("-generate") ) {
+  if( args.size() == 3 && args[1] == QStringLiteral("-generate") ) {
     generateXml(args[2]);
     return EXIT_SUCCESS;
   }

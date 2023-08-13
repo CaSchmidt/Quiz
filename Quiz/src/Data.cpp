@@ -49,7 +49,7 @@ namespace priv {
       return imagePath;
     }
 
-    const QDir       dir = QFileInfo(basePath).absoluteDir();
+    const QDir dir       = QFileInfo(basePath).absoluteDir();
     const QFileInfo info = QFileInfo(dir, imagePath);
     if( info.exists() ) {
       return info.absoluteFilePath();
@@ -77,8 +77,8 @@ namespace priv {
       return defValue;
     }
     const QString defValueStr = defValue
-        ? QStringLiteral("true")
-        : QStringLiteral("false");
+                                ? QStringLiteral("true")
+                                : QStringLiteral("false");
     return child.attribute(attr, defValueStr) == QStringLiteral("true");
   }
 
@@ -91,20 +91,20 @@ namespace priv {
       return defValue;
     }
     const QString defValueStr =
-        QString::number(defValue, base);
-    bool ok = false;
+      QString::number(defValue, base);
+    bool ok             = false;
     const int attrValue = child.attribute(attr, defValueStr).toInt(&ok, base);
     return ok
-        ? attrValue
-        : defValue;
+           ? attrValue
+           : defValue;
   }
 
   QString readText(const QDomNode& parent, const QString& tag)
   {
     const QDomElement xml_child = parent.firstChildElement(tag);
     return xml_child.isNull()
-        ? QString()
-        : xml_child.text();
+           ? QString()
+           : xml_child.text();
   }
 
   void assignText(QString& lhs, const QDomNode& parent, const QString& tag)
@@ -128,19 +128,19 @@ Quiz::Quiz(const QString& _solution)
     return;
   }
 
-  for(const QChar& c : solution) {
-    if( !space.contains(c) ) {
-      space.push_back(c);
+  for( const QChar& c : solution ) {
+    if( !letters.contains(c) ) {
+      letters.push_back(c);
     }
   }
-  std::sort(space.begin(), space.end());
+  std::sort(letters.begin(), letters.end());
 
-  for(int i = 0; i < space.size(); i++) {
+  for( int i = 0; i < letters.size(); i++ ) {
     const int no = i + 1;
     Question q;
     q.answer   = QStringLiteral("Answer %1").arg(no);
     q.category = QStringLiteral("Category %1").arg(no);
-    q.letter   = space[i];
+    q.letter   = letters[i];
     q.question = QStringLiteral("Question %1").arg(no);
     questions.push_back(q);
   }
@@ -148,7 +148,7 @@ Quiz::Quiz(const QString& _solution)
 
 bool Quiz::isEmpty() const
 {
-  return questions.isEmpty()  ||  solution.isEmpty()  ||  space.isEmpty();
+  return letters.isEmpty() || questions.isEmpty() || solution.isEmpty();
 }
 
 void Quiz::write(const QString& filename) const
@@ -160,7 +160,7 @@ void Quiz::write(const QString& filename) const
 
   priv::appendText(doc, xml_root, QStringLiteral("solution"), solution);
 
-  for(const Question& q : questions) {
+  for( const Question& q : questions ) {
     QDomElement xml_question = doc.createElement(QStringLiteral("question"));
     xml_root.appendChild(xml_question);
 
@@ -205,19 +205,19 @@ Quiz Quiz::read(const QString& filename)
 
   result.fontSize = priv::probeIntAttribute(doc, QStringLiteral("quiz"), QStringLiteral("font_size"), DEFAULT_FONTSIZE);
 
-  int pos = 0;
+  int pos                  = 0;
   QDomElement xml_question = xml_root.firstChildElement(QStringLiteral("question"));
   while( !xml_question.isNull() ) {
     if( pos < result.questions.size() ) {
       auto it = std::next(result.questions.begin(), pos);
-      priv::assignText(it->answer,   xml_question, QStringLiteral("answer"));
+      priv::assignText(it->answer, xml_question, QStringLiteral("answer"));
       priv::assignText(it->category, xml_question, QStringLiteral("category"));
-      priv::assignText(it->image,    xml_question, QStringLiteral("image"));
+      priv::assignText(it->image, xml_question, QStringLiteral("image"));
       priv::assignText(it->question, xml_question, QStringLiteral("question"));
       if( !it->image.isEmpty() ) {
-        it->image = priv::adjustImagePath(it->image, filename);
-        it->imageFlipH = priv::probeBoolAttribute(xml_question, QStringLiteral("image"), QStringLiteral("flip_h"));
-        it->imageFlipV = priv::probeBoolAttribute(xml_question, QStringLiteral("image"), QStringLiteral("flip_v"));
+        it->image       = priv::adjustImagePath(it->image, filename);
+        it->imageFlipH  = priv::probeBoolAttribute(xml_question, QStringLiteral("image"), QStringLiteral("flip_h"));
+        it->imageFlipV  = priv::probeBoolAttribute(xml_question, QStringLiteral("image"), QStringLiteral("flip_v"));
         it->imageRotate = priv::probeIntAttribute(xml_question, QStringLiteral("image"), QStringLiteral("rotate"));
       }
     }

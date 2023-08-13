@@ -34,7 +34,7 @@
 
 #include <QStringList>
 
-#define DEFAULT_FONTSIZE  32
+#define DEFAULT_FONTSIZE 32
 
 struct Question {
   Question() = default;
@@ -42,10 +42,10 @@ struct Question {
   QString answer{};
   QString category{};
   QString image{};
-  bool    imageFlipH{false};
-  bool    imageFlipV{false};
-  int     imageRotate{0};
-  QChar   letter{};
+  bool imageFlipH{false};
+  bool imageFlipV{false};
+  int imageRotate{0};
+  QChar letter{};
   QString question{};
 };
 
@@ -61,9 +61,9 @@ struct Quiz {
   static Quiz read(const QString& filename);
 
   int fontSize{DEFAULT_FONTSIZE};
+  QString letters{};
   QList<Question> questions{};
   QString solution{};
-  QString space{};
 };
 
 #endif // DATA_H
