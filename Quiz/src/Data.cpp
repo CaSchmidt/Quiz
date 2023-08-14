@@ -205,26 +205,21 @@ Quiz Quiz::read(const QString& filename)
 
   result.fontSize = priv::probeIntAttribute(doc, QStringLiteral("quiz"), QStringLiteral("font_size"), DEFAULT_FONTSIZE);
 
-  int pos                  = 0;
-  QDomElement xml_question = xml_root.firstChildElement(QStringLiteral("question"));
-  while( !xml_question.isNull() ) {
-    if( pos < result.questions.size() ) {
-      auto it = std::next(result.questions.begin(), pos);
-      priv::assignText(it->answer, xml_question, QStringLiteral("answer"));
-      priv::assignText(it->category, xml_question, QStringLiteral("category"));
-      priv::assignText(it->image, xml_question, QStringLiteral("image"));
-      priv::assignText(it->question, xml_question, QStringLiteral("question"));
-      if( !it->image.isEmpty() ) {
-        it->image       = priv::adjustImagePath(it->image, filename);
-        it->imageFlipH  = priv::probeBoolAttribute(xml_question, QStringLiteral("image"), QStringLiteral("flip_h"));
-        it->imageFlipV  = priv::probeBoolAttribute(xml_question, QStringLiteral("image"), QStringLiteral("flip_v"));
-        it->imageRotate = priv::probeIntAttribute(xml_question, QStringLiteral("image"), QStringLiteral("rotate"));
-      }
+  auto it = result.questions.begin();
+  for( QDomElement xml_question = xml_root.firstChildElement(QStringLiteral("question"));
+       !xml_question.isNull() && it != result.questions.end();
+       xml_question = xml_question.nextSiblingElement(QStringLiteral("question")), ++it ) {
+    priv::assignText(it->answer, xml_question, QStringLiteral("answer"));
+    priv::assignText(it->category, xml_question, QStringLiteral("category"));
+    priv::assignText(it->image, xml_question, QStringLiteral("image"));
+    priv::assignText(it->question, xml_question, QStringLiteral("question"));
+    if( !it->image.isEmpty() ) {
+      it->image       = priv::adjustImagePath(it->image, filename);
+      it->imageFlipH  = priv::probeBoolAttribute(xml_question, QStringLiteral("image"), QStringLiteral("flip_h"));
+      it->imageFlipV  = priv::probeBoolAttribute(xml_question, QStringLiteral("image"), QStringLiteral("flip_v"));
+      it->imageRotate = priv::probeIntAttribute(xml_question, QStringLiteral("image"), QStringLiteral("rotate"));
     }
-
-    xml_question = xml_question.nextSiblingElement(QStringLiteral("question"));
-    pos++;
-  }
+  } // For Each XML Element
 
   return result;
 }
