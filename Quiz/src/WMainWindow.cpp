@@ -82,12 +82,7 @@ void WMainWindow::open()
 
 void WMainWindow::uncover(const QChar& c)
 {
-  for(int i = 0; i < qMin<int>(_quiz.solution.size(), _uncovered.size()); i++) {
-    if( _quiz.solution[i] == c ) {
-      _uncovered[i] = c;
-    }
-  }
-  ui->solutionEdit->setText(_uncovered);
+  ui->solutionEdit->setText(_quiz.solve(c));
 }
 
 ////// private ///////////////////////////////////////////////////////////////
@@ -98,8 +93,7 @@ void WMainWindow::setupQuiz(const Quiz& quiz)
 
   _questionsModel->setQuestions(_quiz);
 
-  _uncovered.fill(QChar::fromLatin1('_'), _quiz.solution.size());
-  ui->solutionEdit->setText(_uncovered);
+  ui->solutionEdit->setText(_quiz.displayText);
   QFont f = ui->solutionEdit->font();
   f.setBold(true);
   f.setLetterSpacing(QFont::AbsoluteSpacing, 16.0);

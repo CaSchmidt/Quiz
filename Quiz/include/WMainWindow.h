@@ -38,7 +38,7 @@
 
 namespace Ui {
   class WMainWindow;
-}
+} // namespace Ui
 
 class QuestionsModel;
 
@@ -58,7 +58,6 @@ private:
   Ui::WMainWindow *ui{nullptr};
   QuestionsModel *_questionsModel{nullptr};
   Quiz _quiz{};
-  QString _uncovered{};
 };
 
 #endif // WMAINWINDOW_H
