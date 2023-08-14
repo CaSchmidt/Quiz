@@ -56,10 +56,13 @@ struct Quiz {
 
   bool isEmpty() const;
 
+  void reset();
+  QString solve(const QChar& c);
   void write(const QString& filename) const;
 
   static Quiz read(const QString& filename);
 
+  QString displayText{};
   int fontSize{DEFAULT_FONTSIZE};
   QString letters{};
   QList<Question> questions{};

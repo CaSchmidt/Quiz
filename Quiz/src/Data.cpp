@@ -29,6 +29,7 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
+#include <algorithm>
 #include <iterator>
 
 #include <QtCore/QDir>
@@ -121,15 +122,14 @@ namespace priv {
 
 Quiz::Quiz(const QString& _solution)
 {
-  solution = _solution.toUpper();
-  solution.remove(QRegExp(QStringLiteral("[^A-Z]")));
+  solution = _solution.toUpper().simplified();
 
   if( solution.isEmpty() ) {
     return;
   }
 
   for( const QChar& c : solution ) {
-    if( !letters.contains(c) ) {
+    if( c.isLetter() && !letters.contains(c) ) {
       letters.push_back(c);
     }
   }
@@ -144,11 +144,41 @@ Quiz::Quiz(const QString& _solution)
     q.question = QStringLiteral("Question %1").arg(no);
     questions.push_back(q);
   }
+
+  reset();
 }
 
 bool Quiz::isEmpty() const
 {
   return letters.isEmpty() || questions.isEmpty() || solution.isEmpty();
+}
+
+void Quiz::reset()
+{
+  constexpr QChar UNDERSCORE = QChar::fromLatin1('_');
+
+  constexpr auto if_letter = [](const QChar& c) -> bool {
+    return c.isLetter();
+  };
+
+  displayText = solution;
+  std::replace_if(displayText.begin(), displayText.end(), if_letter, UNDERSCORE);
+}
+
+QString Quiz::solve(const QChar& c)
+{
+  if( !c.isLetter() ) {
+    return displayText;
+  }
+
+  const int len = std::min<int>(displayText.size(), solution.size());
+  for( int i = 0; i < len; i++ ) {
+    if( solution[i] == c.toUpper() ) {
+      displayText[i] = solution[i];
+    }
+  }
+
+  return displayText;
 }
 
 void Quiz::write(const QString& filename) const
