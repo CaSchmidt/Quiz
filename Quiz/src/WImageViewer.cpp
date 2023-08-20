@@ -64,12 +64,12 @@ void WImageViewer::keyPressEvent(QKeyEvent *event)
       close();
     }
   } else if( event->key() == Qt::Key_Backspace ) {
-    if( _pos != _images.cbegin() ) {
+    if( !isEnd() && !isBegin() ) {
       _pos = std::prev(_pos);
       updateImage();
     }
   } else if( event->key() == Qt::Key_Space ) {
-    if( std::next(_pos) != _images.cend() ) {
+    if( !isEnd() && std::next(_pos) != _images.cend() ) {
       _pos = std::next(_pos);
       updateImage();
     }
@@ -81,20 +81,32 @@ void WImageViewer::paintEvent(QPaintEvent * /*event*/)
   QPainter painter(this);
   painter.fillRect(0, 0, width(), height(), Qt::black);
 
-  if( !_image.isNull() ) {
-    const QImage image = _image.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    const int offx     = (width() - image.width()) / 2;
-    const int offy     = (height() - image.height()) / 2;
-
-    painter.drawImage(offx, offy, image);
+  if( _image.isNull() ) {
+    return;
   }
+
+  const QImage image = _image.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+  const int offx     = (width() - image.width()) / 2;
+  const int offy     = (height() - image.height()) / 2;
+
+  painter.drawImage(offx, offy, image);
 }
 
 ////// private ///////////////////////////////////////////////////////////////
 
+bool WImageViewer::isBegin() const
+{
+  return _pos == _images.cbegin();
+}
+
+bool WImageViewer::isEnd() const
+{
+  return _pos == _images.cend();
+}
+
 void WImageViewer::updateImage()
 {
-  if( _pos != _images.cend() ) {
+  if( !isEnd() ) {
     QString title;
     title += QStringLiteral("Image");
     if( _images.size() > 1 ) {
@@ -107,7 +119,7 @@ void WImageViewer::updateImage()
 
     _image = _pos->load();
   } else {
-    setWindowTitle(QStringLiteral("Image"));
+    setWindowTitle(QStringLiteral("No Image"));
   }
   update();
 }

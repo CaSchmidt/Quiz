@@ -46,6 +46,8 @@ protected:
   void paintEvent(QPaintEvent *event);
 
 private:
+  bool isBegin() const;
+  bool isEnd() const;
   void updateImage();
 
   using citer_t = Images::const_iterator;
