@@ -29,43 +29,33 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#ifndef DATA_H
-#define DATA_H
+#include <QtCore/QFileInfo>
 
-#include <QStringList>
+#include <QtGui/QImage>
 
 #include "Image.h"
 
-constexpr int DEFAULT_FONTSIZE = 32;
+#include "Util.h"
 
-struct Question {
-  Question() = default;
+Image::Image() noexcept = default;
 
-  QString answer{};
-  QString category{};
-  std::list<Image> images{};
-  QChar letter{};
-  QString question{};
-};
+bool Image::exists() const
+{
+  return QFileInfo::exists(path);
+}
 
-struct Quiz {
-  Quiz() = default;
+QImage Image::load() const
+{
+  QImage result;
+  if( !exists() || !result.load(path) ) {
+    return QImage{};
+  }
 
-  Quiz(const QString& _solution);
+  if( rotate != 0 ) {
+    result = util::rotated(result, rotate);
+  } else if( flipH || flipV ) {
+    result = result.mirrored(flipH, flipV);
+  }
 
-  bool isEmpty() const;
-
-  void reset();
-  QString solve(const QChar& c);
-  void write(const QString& filename) const;
-
-  static Quiz read(const QString& filename);
-
-  QString displayText{};
-  int fontSize{DEFAULT_FONTSIZE};
-  QString letters{};
-  QList<Question> questions{};
-  QString solution{};
-};
-
-#endif // DATA_H
+  return result;
+}

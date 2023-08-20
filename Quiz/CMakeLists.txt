@@ -20,6 +20,7 @@ list(APPEND Quiz_FORMS
 
 list(APPEND Quiz_HEADERS
   include/Data.h
+  include/Image.h
   include/QuestionsModel.h
   include/Util.h
   include/WImageViewer.h
@@ -29,6 +30,7 @@ list(APPEND Quiz_HEADERS
 
 list(APPEND Quiz_SOURCES
   src/Data.cpp
+  src/Image.cpp
   src/QuestionsModel.cpp
   src/Util.cpp
   src/WImageViewer.cpp

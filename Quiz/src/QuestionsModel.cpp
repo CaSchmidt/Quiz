@@ -51,7 +51,7 @@ QuestionsModel::~QuestionsModel()
 
 QVariant QuestionsModel::data(const QModelIndex& index, int role) const
 {
-  if(        role == Qt::FontRole ) {
+  if( role == Qt::FontRole ) {
     QFont font = QApplication::font();
     font.setBold(true);
     font.setPointSize(_fontSize);
@@ -63,7 +63,6 @@ QVariant QuestionsModel::data(const QModelIndex& index, int role) const
   } else if( role == Qt::DisplayRole ) {
     const auto it = std::next(_questions.begin(), index.row());
     return it->category;
-
   }
 
   return QVariant();
@@ -91,13 +90,13 @@ void QuestionsModel::setQuestions(const Quiz& quiz)
 
 void QuestionsModel::activate(const QModelIndex& index)
 {
-  if( !index.isValid()  ||  index.row() < 0  ||  index.row() >= _questions.size() ) {
+  if( !index.isValid() || index.row() < 0 || index.row() >= _questions.size() ) {
     return;
   }
 
   auto it = std::next(_questions.begin(), index.row());
 
-  WQuestion d(dynamic_cast<QWidget*>(parent()));
+  WQuestion d(dynamic_cast<QWidget *>(parent()));
   d.setQuestion(_fontSize, *it);
   d.resize(800, 600);
 
@@ -107,15 +106,12 @@ void QuestionsModel::activate(const QModelIndex& index)
 
   emit uncovered(it->letter);
 
-  QImage image;
-  if( !it->image.isEmpty()  &&  image.load(it->image) ) {
-    if(        it->imageRotate != 0 ) {
-      image = util::rotated(image, it->imageRotate);
-    } else if( it->imageFlipH  ||  it->imageFlipV ) {
-      image = image.mirrored(it->imageFlipH, it->imageFlipV);
+  if( !it->images.empty() ) {
+    const QImage image = it->images.front().load();
+    if( !image.isNull() ) {
+      WImageViewer *viewer = new WImageViewer(image);
+      viewer->showMaximized();
     }
-    WImageViewer *viewer = new WImageViewer(image);
-    viewer->showMaximized();
   }
 
   beginResetModel();

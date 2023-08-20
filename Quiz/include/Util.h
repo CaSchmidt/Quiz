@@ -29,8 +29,7 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#ifndef UTIL_H
-#define UTIL_H
+#pragma once
 
 class QImage;
 
@@ -39,5 +38,3 @@ namespace util {
   QImage rotated(const QImage& image, const int angle);
 
 } // namespace util
-
-#endif // UTIL_H
