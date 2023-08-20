@@ -9,8 +9,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(FormatOutputName)
 
-find_package(Qt5Widgets 5.12 REQUIRED)
-find_package(Qt5Xml 5.12 REQUIRED)
+find_package(Qt5 5.12 REQUIRED COMPONENTS Widgets Xml)
 
 ### Files ####################################################################
 
