@@ -42,6 +42,7 @@ struct Image {
 
   bool exists() const;
 
+  QString fileName() const;
   QImage load() const;
 
   bool flipH{false};

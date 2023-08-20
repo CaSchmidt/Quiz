@@ -29,6 +29,8 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
+#include <iterator>
+
 #include <QtGui/QKeyEvent>
 #include <QtGui/QPainter>
 
@@ -36,13 +38,17 @@
 
 ////// public ////////////////////////////////////////////////////////////////
 
-WImageViewer::WImageViewer(const QImage& image, QWidget *parent, Qt::WindowFlags f)
-  : QWidget(parent, f)
-  , _image(image)
+WImageViewer::WImageViewer(const Images& images, QWidget *parent, Qt::WindowFlags f)
+  : QWidget{parent, f}
+  , _images{images}
 {
-  setAttribute(Qt::WA_DeleteOnClose, true);
+  if( parentWidget() == nullptr ) {
+    setAttribute(Qt::WA_DeleteOnClose, true);
+  }
   setAttribute(Qt::WA_OpaquePaintEvent, true);
-  setWindowTitle(QStringLiteral("Image"));
+
+  _pos = _images.cbegin();
+  updateImage();
 }
 
 WImageViewer::~WImageViewer()
@@ -54,17 +60,54 @@ WImageViewer::~WImageViewer()
 void WImageViewer::keyPressEvent(QKeyEvent *event)
 {
   if( event->key() == Qt::Key_Escape ) {
-    close();
+    if( parentWidget() == nullptr ) {
+      close();
+    }
+  } else if( event->key() == Qt::Key_Backspace ) {
+    if( _pos != _images.cbegin() ) {
+      _pos = std::prev(_pos);
+      updateImage();
+    }
+  } else if( event->key() == Qt::Key_Space ) {
+    if( std::next(_pos) != _images.cend() ) {
+      _pos = std::next(_pos);
+      updateImage();
+    }
   }
 }
 
 void WImageViewer::paintEvent(QPaintEvent * /*event*/)
 {
-  const QImage image = _image.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-  const int     offx = (width()  - image.width() )/2;
-  const int     offy = (height() - image.height())/2;
-
   QPainter painter(this);
   painter.fillRect(0, 0, width(), height(), Qt::black);
-  painter.drawImage(offx, offy, image);
+
+  if( !_image.isNull() ) {
+    const QImage image = _image.scaled(size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    const int offx     = (width() - image.width()) / 2;
+    const int offy     = (height() - image.height()) / 2;
+
+    painter.drawImage(offx, offy, image);
+  }
+}
+
+////// private ///////////////////////////////////////////////////////////////
+
+void WImageViewer::updateImage()
+{
+  if( _pos != _images.cend() ) {
+    QString title;
+    title += QStringLiteral("Image");
+    if( _images.size() > 1 ) {
+      const auto i = std::distance(_images.cbegin(), _pos);
+
+      title += QStringLiteral(" %1 of %2").arg(i + 1).arg(_images.size());
+    }
+    title += QStringLiteral(" - [%1]").arg(_pos->fileName());
+    setWindowTitle(title);
+
+    _image = _pos->load();
+  } else {
+    setWindowTitle(QStringLiteral("Image"));
+  }
+  update();
 }

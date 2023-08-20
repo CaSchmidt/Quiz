@@ -29,15 +29,16 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#ifndef WIMAGEVIEWER_H
-#define WIMAGEVIEWER_H
+#pragma once
 
 #include <QtWidgets/QWidget>
+
+#include "Image.h"
 
 class WImageViewer : public QWidget {
   Q_OBJECT
 public:
-  WImageViewer(const QImage& image, QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  WImageViewer(const Images& images, QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
   ~WImageViewer();
 
 protected:
@@ -45,7 +46,11 @@ protected:
   void paintEvent(QPaintEvent *event);
 
 private:
-  QImage _image{};
-};
+  void updateImage();
 
-#endif // WIMAGEVIEWER_H
+  using citer_t = Images::const_iterator;
+
+  QImage _image{};
+  Images _images{};
+  citer_t _pos{};
+};

@@ -44,6 +44,11 @@ bool Image::exists() const
   return QFileInfo::exists(path);
 }
 
+QString Image::fileName() const
+{
+  return QFileInfo(path).fileName();
+}
+
 QImage Image::load() const
 {
   QImage result;

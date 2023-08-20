@@ -107,11 +107,8 @@ void QuestionsModel::activate(const QModelIndex& index)
   emit uncovered(it->letter);
 
   if( !it->images.empty() ) {
-    const QImage image = it->images.front().load();
-    if( !image.isNull() ) {
-      WImageViewer *viewer = new WImageViewer(image);
-      viewer->showMaximized();
-    }
+    WImageViewer *viewer = new WImageViewer(it->images);
+    viewer->showMaximized();
   }
 
   beginResetModel();
