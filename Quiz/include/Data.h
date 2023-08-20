@@ -29,8 +29,7 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#ifndef DATA_H
-#define DATA_H
+#pragma once
 
 #include <QStringList>
 
@@ -43,7 +42,7 @@ struct Question {
 
   QString answer{};
   QString category{};
-  std::list<Image> images{};
+  Images images{};
   QChar letter{};
   QString question{};
 };
@@ -67,5 +66,3 @@ struct Quiz {
   QList<Question> questions{};
   QString solution{};
 };
-
-#endif // DATA_H

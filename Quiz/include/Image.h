@@ -31,6 +31,8 @@
 
 #pragma once
 
+#include <list>
+
 #include <QtCore/QString>
 
 class QImage;
@@ -47,3 +49,5 @@ struct Image {
   QString path{};
   int rotate{0};
 };
+
+using Images = std::list<Image>;
