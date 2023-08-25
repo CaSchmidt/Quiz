@@ -64,12 +64,12 @@ void WImageViewer::keyPressEvent(QKeyEvent *event)
       close();
     }
   } else if( event->key() == Qt::Key_Backspace ) {
-    if( !isEnd() && !isBegin() ) {
+    if( !isEmpty() && !isBegin() ) {
       _pos = std::prev(_pos);
       updateImage();
     }
   } else if( event->key() == Qt::Key_Space ) {
-    if( !isEnd() && std::next(_pos) != _images.cend() ) {
+    if( !isEmpty() && std::next(_pos) != _images.cend() ) {
       _pos = std::next(_pos);
       updateImage();
     }
@@ -99,14 +99,14 @@ bool WImageViewer::isBegin() const
   return _pos == _images.cbegin();
 }
 
-bool WImageViewer::isEnd() const
+bool WImageViewer::isEmpty() const
 {
-  return _pos == _images.cend();
+  return _images.empty();
 }
 
 void WImageViewer::updateImage()
 {
-  if( !isEnd() ) {
+  if( !isEmpty() ) {
     QString title;
     title += QStringLiteral("Image");
     if( _images.size() > 1 ) {

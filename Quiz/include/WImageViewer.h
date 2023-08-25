@@ -47,12 +47,13 @@ protected:
 
 private:
   bool isBegin() const;
-  bool isEnd() const;
+  bool isEmpty() const;
   void updateImage();
 
-  using citer_t = Images::const_iterator;
+  using positer_t = Images::const_iterator;
 
+  QColor _bgColor{Qt::black};
   QImage _image{};
   Images _images{};
-  citer_t _pos{};
+  positer_t _pos{};
 };
