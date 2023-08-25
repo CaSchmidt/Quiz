@@ -79,7 +79,7 @@ void WImageViewer::keyPressEvent(QKeyEvent *event)
 void WImageViewer::paintEvent(QPaintEvent * /*event*/)
 {
   QPainter painter(this);
-  painter.fillRect(0, 0, width(), height(), Qt::black);
+  painter.fillRect(0, 0, width(), height(), _bgColor);
 
   if( _image.isNull() ) {
     return;
@@ -117,9 +117,16 @@ void WImageViewer::updateImage()
     title += QStringLiteral(" - [%1]").arg(_pos->fileName());
     setWindowTitle(title);
 
+    _bgColor.setNamedColor(_pos->bgColor);
+    if( !_bgColor.isValid() ) {
+      _bgColor = Qt::black;
+    }
+
     _image = _pos->load();
   } else {
     setWindowTitle(QStringLiteral("No Image"));
+
+    _bgColor = Qt::black;
   }
   update();
 }

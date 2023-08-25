@@ -45,6 +45,7 @@ struct Image {
   QString fileName() const;
   QImage load() const;
 
+  QString bgColor{QStringLiteral("#000000")};
   bool flipH{false};
   bool flipV{false};
   QString path{};

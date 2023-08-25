@@ -248,10 +248,11 @@ Quiz Quiz::read(const QString& filename)
          xml_image = xml_image.nextSiblingElement(QStringLiteral("image")) ) {
       Image image;
 
-      image.path   = priv::adjustImagePath(xml_image.text(), filename);
-      image.flipH  = priv::probeBoolAttribute(xml_image, QStringLiteral("flip_h"));
-      image.flipV  = priv::probeBoolAttribute(xml_image, QStringLiteral("flip_v"));
-      image.rotate = priv::probeIntAttribute(xml_image, QStringLiteral("rotate"));
+      image.path    = priv::adjustImagePath(xml_image.text(), filename);
+      image.bgColor = xml_image.attribute(QStringLiteral("bg"));
+      image.flipH   = priv::probeBoolAttribute(xml_image, QStringLiteral("flip_h"));
+      image.flipV   = priv::probeBoolAttribute(xml_image, QStringLiteral("flip_v"));
+      image.rotate  = priv::probeIntAttribute(xml_image, QStringLiteral("rotate"));
 
       if( image.exists() ) {
         it->images.push_back(image);
