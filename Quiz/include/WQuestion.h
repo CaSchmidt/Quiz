@@ -29,8 +29,7 @@
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-#ifndef WQUESTION_H
-#define WQUESTION_H
+#pragma once
 
 #include <QtWidgets/QDialog>
 
@@ -38,7 +37,7 @@
 
 namespace Ui {
   class WQuestion;
-}
+} // namespace Ui
 
 class WQuestion : public QDialog {
   Q_OBJECT
@@ -53,11 +52,8 @@ private slots:
 
 private:
   void enableOk(const bool enable);
-  void setupFont(QWidget *w) const;
 
   Ui::WQuestion *ui;
   int _fontSize{};
   Question _question{};
 };
-
-#endif // WQUESTION_H

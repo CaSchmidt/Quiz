@@ -32,6 +32,32 @@
 #include "wquestion.h"
 #include "ui_wquestion.h"
 
+////// Private ///////////////////////////////////////////////////////////////
+
+namespace impl {
+
+  void setupDocument(QTextDocument *doc, const bool font_bold, const int font_size)
+  {
+    doc->clear();
+
+    // (1) Font //////////////////////////////////////////////////////////////
+
+    QFont font = doc->defaultFont();
+    font.setBold(font_bold);
+    if( font_size > 0 ) {
+      font.setPointSize(font_size);
+    }
+    doc->setDefaultFont(font);
+
+    // (2) Layout ////////////////////////////////////////////////////////////
+
+    QTextOption opt = doc->defaultTextOption();
+    opt.setAlignment(Qt::AlignCenter);
+    doc->setDefaultTextOption(opt);
+  }
+
+} // namespace impl
+
 ////// public ////////////////////////////////////////////////////////////////
 
 WQuestion::WQuestion(QWidget *parent, Qt::WindowFlags f)
@@ -62,18 +88,16 @@ void WQuestion::setQuestion(const int fontSize, const Question& q)
   _fontSize = fontSize;
   _question = q;
 
-  setupFont(ui->questionBrowser);
-  ui->questionBrowser->setText(_question.question);
-  ui->questionBrowser->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  impl::setupDocument(ui->questionBrowser->document(), true, _fontSize);
+  ui->questionBrowser->setHtml(_question.question);
 }
 
 ////// private slots /////////////////////////////////////////////////////////
 
 void WQuestion::showAnswer()
 {
-  setupFont(ui->answerBrowser);
-  ui->answerBrowser->setText(_question.answer);
-  ui->answerBrowser->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  impl::setupDocument(ui->answerBrowser->document(), true, _fontSize);
+  ui->answerBrowser->setHtml(_question.answer);
 
   enableOk(true);
 }
@@ -86,12 +110,4 @@ void WQuestion::enableOk(const bool enable)
   if( b != nullptr ) {
     b->setEnabled(enable);
   }
-}
-
-void WQuestion::setupFont(QWidget *w) const
-{
-  QFont f = w->font();
-  f.setBold(true);
-  f.setPointSize(_fontSize);
-  w->setFont(f);
 }
