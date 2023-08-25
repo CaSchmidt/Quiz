@@ -111,7 +111,16 @@ namespace priv {
   {
     const QString text = readText(parent, tag);
     if( !text.isEmpty() ) {
-      lhs = text;
+      constexpr QChar LF = QChar::fromLatin1('\n');
+      if( text.contains(LF) ) {
+        QStringList lines = text.split(LF, QString::SkipEmptyParts);
+        for( QString& line : lines ) {
+          line = line.trimmed();
+        }
+        lhs = lines.join(LF);
+      } else {
+        lhs = text.trimmed();
+      }
     }
   }
 
