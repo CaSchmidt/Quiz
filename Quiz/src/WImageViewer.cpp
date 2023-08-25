@@ -63,12 +63,12 @@ void WImageViewer::keyPressEvent(QKeyEvent *event)
     if( parentWidget() == nullptr ) {
       close();
     }
-  } else if( event->key() == Qt::Key_Backspace ) {
+  } else if( event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Left ) {
     if( !isEmpty() && !isBegin() ) {
       _pos = std::prev(_pos);
       updateImage();
     }
-  } else if( event->key() == Qt::Key_Space ) {
+  } else if( event->key() == Qt::Key_Space || event->key() == Qt::Key_Right ) {
     if( !isEmpty() && std::next(_pos) != _images.cend() ) {
       _pos = std::next(_pos);
       updateImage();
